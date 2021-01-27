@@ -1,45 +1,39 @@
-const { App } = require('@slack/bolt');
+import { App } from '@slack/bolt';
+import dotenv from 'dotenv';
+dotenv.config();
 
-// Initializes your app with your bot token and signing secret
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
-  signingSecret: process.env.SLACK_SIGNING_SECRET
+  signingSecret: process.env.SLACK_SIGNING_SECRET,
 });
 
-// Listens to incoming messages that contain "hello"
-app.message('hello', async ({ message, say }) => {
-  // say() sends a message to the channel where the event was triggered
-  await say({
-    blocks: [
-      {
-        "type": "section",
-        "text": {
-          "type": "mrkdwn",
-          "text": `Hey there <@${message.user}>!`
-        },
-        "accessory": {
-          "type": "button",
-          "text": {
-            "type": "plain_text",
-            "text": "Click Me"
-          },
-          "action_id": "button_click"
-        }
-      }
-    ],
-    text: `Hey there <@${message.user}>!`
-  });
-});
+app.event('emoji_changed', async ({ event, client }) => {
+  try{
+    console.log(event);
 
-app.action('button_click', async ({ body, ack, say }) => {
-  // Acknowledge the action
-  await ack();
-  await say(`<@${body.user.id}> clicked the button`);
+    if (event.subtype === 'add') {
+      console.log('added!');
+  
+      const { name } = event;
+      await client.chat.postMessage({
+        channel: process.env.CHANNEL_ID,
+        text: `🎉 A new emoji has been added! :${name}: \`:${name}:\``,
+      });
+    }
+  }catch(e){
+    console.error(e)
+  }
+
 });
 
 (async () => {
-  // Start your app
-  await app.start(process.env.PORT || 3000);
+  try{
+    await app.start(process.env.PORT || 3000);
+    console.log('⚡️ Bolt app is running!');
+  
 
-  console.log('⚡️ Bolt app is running!');
+  }catch(e){
+    console.log(e)
+  }
+
 })();
