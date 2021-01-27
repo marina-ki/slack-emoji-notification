@@ -1,3 +1,5 @@
+https://slack.dev/bolt-js/deployments/heroku#get-a-bolt-slack-app
+
 # Getting Started ⚡️ Bolt for JavaScript
 > Slack app example from 📚 [Getting started with Bolt for JavaScript tutorial][1]
 
