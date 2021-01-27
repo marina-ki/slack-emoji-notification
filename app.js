@@ -1,10 +1,10 @@
-import { App } from '@slack/bolt';
-import dotenv from 'dotenv';
+const { App } =require('@slack/bolt');
+const dotenv =require('dotenv');
 dotenv.config();
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
-  signingSecret: process.env.SLACK_SIGNING_SECRET,
+  signingSecret: process.env.SLACK_SIGNING_SECRET
 });
 
 app.event('emoji_changed', async ({ event, client }) => {
